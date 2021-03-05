@@ -6,10 +6,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "C:/Users/Amine/CLionProjects/MC-EK/main.cpp" "C:/Users/Amine/CLionProjects/MC-EK/cmake-build-debug/CMakeFiles/MC_EK.dir/main.cpp.obj"
   )
-set(CMAKE_CXX_COMPILER_ID "MSVC")
+set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "../pnl-win64-1.10.4/include"
   )
 
 # Targets to which this target links.
