@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\Amine\CLionProjects\MC-EK
+"C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\amine\CLionProjects\MC-EK
 -- The C compiler identification is GNU 8.1.0
 -- The CXX compiler identification is GNU 8.1.0
 -- Check for working C compiler: C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe
@@ -13,9 +13,9 @@
 -- Detecting CXX compiler ABI info - done
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Found Pnl: C:/Users/Amine/CLionProjects/MC-EK/pnl-win64-1.10.4/lib/libpnl.dll  
--- PNL Include: C:/Users/Amine/CLionProjects/MC-EK/pnl-win64-1.10.4/include
--- PNL Libraries: C:/Users/Amine/CLionProjects/MC-EK/pnl-win64-1.10.4/lib/libpnl.dll
+-- Found Pnl: C:/Users/amine/CLionProjects/MC-EK/pnl-win64-1.10.4/lib/libpnl.dll  
+-- PNL Include: C:/Users/amine/CLionProjects/MC-EK/pnl-win64-1.10.4/include
+-- PNL Libraries: C:/Users/amine/CLionProjects/MC-EK/pnl-win64-1.10.4/lib/libpnl.dll
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/Users/Amine/CLionProjects/MC-EK/cmake-build-debug
+-- Build files have been written to: C:/Users/amine/CLionProjects/MC-EK/cmake-build-debug
