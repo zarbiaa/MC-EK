@@ -6,7 +6,7 @@
 int main() {
     //PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     //pnl_rng_sseed(rng, time(NULL));
-    PnlVect *v = pnl_vect_create(3);
+    PnlVect *v = pnl_vect_create(5);
     pnl_vect_print(v);
 
 
