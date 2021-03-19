@@ -38,6 +38,14 @@ add_custom_command(TARGET REGRESSION POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:REGRESSION>)
+add_executable(TEST test.cpp ${ML})
+
+target_link_libraries(TEST ${LIBS})
+
+add_custom_command(TARGET TEST POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST>)
 
 add_executable(TEST-MC test/test_path_generation.cpp src/BlackScholesModel.cpp src/BlackScholesModel.h)
 
@@ -47,3 +55,12 @@ add_custom_command(TARGET TEST-MC POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:TEST-MC>)
+
+add_executable(TEST-POLYREG test/test_polyreg.cpp ${ML} src/PolyReg.cpp src/PolyReg.h)
+
+target_link_libraries(TEST-POLYREG ${LIBS})
+
+add_custom_command(TARGET TEST-POLYREG POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST-POLYREG>)
