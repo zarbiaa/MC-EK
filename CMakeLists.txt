@@ -16,6 +16,7 @@ add_executable(MC_EK main.cpp)
 
 add_executable(POLY test-polynomial.cpp alglib-3.17.0.cpp.gpl/cpp/src/specialfunctions.cpp alglib-3.17.0.cpp.gpl/cpp/src/ap.cpp alglib-3.17.0.cpp.gpl/cpp/src/alglibinternal.cpp)
 file(GLOB ML "alglib-3.17.0.cpp.gpl/cpp/src/*.cpp")
+
 add_executable(REGRESSION test-regression.cpp ${ML})
 target_link_libraries(MC_EK ${LIBS})
 
@@ -37,3 +38,12 @@ add_custom_command(TARGET REGRESSION POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:REGRESSION>)
+
+add_executable(TEST-MC test/test_path_generation.cpp src/BlackScholesModel.cpp src/BlackScholesModel.h)
+
+target_link_libraries(TEST-MC ${LIBS})
+
+add_custom_command(TARGET TEST-MC POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST-MC>)
