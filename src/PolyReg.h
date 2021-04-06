@@ -37,7 +37,7 @@ public:
 
     void fit(PnlVect* stock_values, PnlVect* discounted_CF);
 
-    //PnlVect* apply_fit(PnlVect* stock_values);
+    void apply_fit(PnlVect* stock_values, PnlVect* fitted_values);
 };
 
 

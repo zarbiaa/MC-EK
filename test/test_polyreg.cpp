@@ -22,8 +22,14 @@ int main(){
     double CF[5] = {0, 0.07*df, 0.18*df, 0.20*df, 0.09*df};
     PnlVect *stock_values = pnl_vect_create_from_ptr(5, &stock[0]);
     PnlVect* discounted_CF = pnl_vect_create_from_ptr(5, &CF[0]);
-
+    PnlVect* fitted_values = pnl_vect_create_from_scalar(5, 0.0);
     polyreg->fit(stock_values, discounted_CF);
+    cout << "coefficients of the regression:" << endl;
     pnl_vect_print(polyreg->coeffs_);
+    cout << "fitted values of discounted CF" << endl;
+    polyreg->apply_fit(stock_values, fitted_values);
+    pnl_vect_print(fitted_values);
+    cout << "values of discounted CF:" << endl;
+    pnl_vect_print(discounted_CF);
 }
 

@@ -36,6 +36,7 @@ public:
      */
     void generate_path(PnlMat* path, double T, int nbTimeSteps, PnlRng* rng);
 
+    void generate_paths(PnlMat** stock_paths, double T, int M, int nbTimeSteps, PnlRng *rng);
 };
 
 
