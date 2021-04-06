@@ -13,7 +13,7 @@
 using namespace std;
 
 int main(){
-    string poly_type = "Chebyshev1";
+    string poly_type = "Hermite";
     int max_degree = 2;
 
     PolyReg *polyreg = new PolyReg(poly_type, max_degree);

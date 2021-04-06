@@ -18,6 +18,7 @@ enum type {
     Hermite,
     Legendre,
     Laguerre,
+    Default,
 };
 
 type choix_type(std::string input) {
@@ -26,6 +27,7 @@ type choix_type(std::string input) {
     if( input == "Hermite" ) return Hermite;
     if( input == "Legendre" ) return Legendre;
     if( input == "Laguerre" ) return Laguerre;
+    return Default;
 }
 
 void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
@@ -72,6 +74,7 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
                 xy[i][max_degree_ + 1] = GET(discounted_CF, i);
                 //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
             }
+
             break;
         }
         case Laguerre: {
