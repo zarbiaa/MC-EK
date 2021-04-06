@@ -53,7 +53,26 @@ void BlackScholesModel::generate_path(PnlMat *path, double T, int nbTimeSteps, P
 }
 
 void BlackScholesModel::generate_paths(PnlMat** stock_paths, double T, int M, int nbTimeSteps, PnlRng *rng) {
-    pnl_mat_set_col(stock_paths[0], spot_, 0);
-    pnl_mat_set_col(stock_paths[1], spot_, 0);
+    double expo = 0;
+    double timeSpan = T/nbTimeSteps;
+
+    // init values for the different spots
+    for(int i = 0; i < size_; i++){
+        for(int j = 0; j < M; j++){
+            pnl_mat_set(stock_paths[i], j, 0, GET(spot_, i));
+        }
+    }
+    for (int idx_path = 0; idx_path < M; idx_path++){
+        pnl_mat_rng_normal(G, nbTimeSteps, size_, rng);
+        for (int d = 0; d < size_; d++){
+            pnl_mat_get_row(Ld, correlatioMatrix, d);
+            for (int i = 1; i <= nbTimeSteps; i++) {
+                pnl_mat_get_row(Gi, G, i - 1);
+                expo = pnl_expm1((r_ - pnl_pow_i(GET(sigma_, d), 2) / 2) * timeSpan +
+                                 GET(sigma_, d) * sqrt(timeSpan) * pnl_vect_scalar_prod(Ld, Gi)) + 1;
+                pnl_mat_set(stock_paths[d], idx_path, i, pnl_mat_get(stock_paths[d], idx_path, i - 1) * expo);
+            }
+        }
+    }
 }
 
