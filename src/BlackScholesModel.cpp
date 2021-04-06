@@ -52,3 +52,8 @@ void BlackScholesModel::generate_path(PnlMat *path, double T, int nbTimeSteps, P
     }
 }
 
+void BlackScholesModel::generate_paths(PnlMat** stock_paths, double T, int M, int nbTimeSteps, PnlRng *rng) {
+    pnl_mat_set_col(stock_paths[0], spot_, 0);
+    pnl_mat_set_col(stock_paths[1], spot_, 0);
+}
+

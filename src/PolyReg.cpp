@@ -21,14 +21,12 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
             xy[i][degree] = chebyshevcalculate(2, degree, GET(stock_values, i));
         }
         xy[i][max_degree_ + 1] = GET(discounted_CF, i);
-        cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
-
-
+        //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
     }
 
     real_2d_array xy_2d_array;
     xy_2d_array.attach_to_ptr(n_obs,max_degree_+2,&xy[0][0]);
-    printf("%s\n", xy_2d_array.tostring(4).c_str());
+    //printf("%s\n", xy_2d_array.tostring(4).c_str());
 
 
     ae_int_t info;
@@ -38,8 +36,24 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
     real_1d_array c;
 
     lrbuildz(xy_2d_array, n_obs, max_degree_ + 1, info, model, rep);
-    printf("%d\n", int(info)); // EXPECTED: 1
+    //printf("%d\n", int(info)); // EXPECTED: 1
     lrunpack(model, c, nvars);
-    printf("%s\n", c.tostring(4).c_str()); // EXPECTED: [1.98650,0.00000]
+    //printf("%s\n", c.tostring(4).c_str()); // EXPECTED: [1.98650,0.00000]
     coeffs_ = pnl_vect_create_from_ptr(max_degree_ + 1, &c[0]);
+}
+void PolyReg::apply_fit(PnlVect* stock_values, PnlVect* fitted_values){
+    int n_obs = stock_values->size;
+    double fitted_value = 0;
+    double stock_value = 0;
+    for(int i = 0; i < n_obs; i++){
+        fitted_value = 0;
+        stock_value = GET(stock_values, i);
+        //cout << "stock value at " << i << "= " << stock_value << endl;
+        for(int degree = 0; degree <= max_degree_; degree++){
+            fitted_value += GET(coeffs_, degree) * chebyshevcalculate(2, degree, stock_value);
+            //cout << "fitted value at " << i << "= " << fitted_value << endl;
+
+        }
+        LET(fitted_values, i) = fitted_value;
+    }
 }

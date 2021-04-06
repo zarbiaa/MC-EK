@@ -5,9 +5,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "pnl/pnl_vector.h"
 #include "alglib-3.17.0.cpp.gpl/cpp/src/dataanalysis.h"
 
 using namespace alglib;
+using namespace std;
 
 
 int main(int argc, char **argv)
@@ -29,6 +31,15 @@ int main(int argc, char **argv)
     printf("%d\n", int(info)); // EXPECTED: 1
     lrunpack(model, c, nvars);
     printf("%s\n", c.tostring(4).c_str()); // EXPECTED: [1.98650,0.00000]
+
+    alglib::real_2d_array r2;
+    double a2[] = {11, 12, 13, 21, 22, 23};
+    PnlVect *vect = pnl_vect_create_from_scalar(6, 3.0);
+    r2.attach_to_ptr(3,2,pnl_vect_lget(vect, 0));
+    printf("%s\n", r2.tostring(4).c_str()); // EXPECTED: [1.98650,0.00000]
+
+
+
     return 0;
 }
 
