@@ -44,4 +44,8 @@ int main(){
     }
 
     pnl_mat_print(pnl_mat_transpose(simulated_path));
+
+    cout << stock_paths[0]->m << endl;
+
+
 }

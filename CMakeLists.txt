@@ -64,3 +64,12 @@ add_custom_command(TARGET TEST-POLYREG POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:TEST-POLYREG>)
+
+add_executable(TEST-AMC src/AmericanMC.cpp src/BlackScholesModel.cpp src/BlackScholesModel.h src/PolyReg.cpp src/PolyReg.h ${ML})
+
+target_link_libraries(TEST-AMC ${LIBS})
+
+add_custom_command(TARGET TEST-AMC POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST-AMC>)
