@@ -111,7 +111,9 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
     }
 
     real_2d_array xy_2d_array;
-    xy_2d_array.attach_to_ptr(n_obs,max_degree_+2,&xy[0][0]);
+    xy_2d_array.attach_to_ptr(counter,max_degree_+2,&xy[0][0]);
+    //cout << "n_obs" << n_obs << endl;
+    //cout << "counter" << counter << endl;
     //printf("%s\n", xy_2d_array.tostring(4).c_str());
 
 
@@ -120,11 +122,18 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
     linearmodel model;
     lrreport rep;
     real_1d_array c;
+    try
+    {
+        lrbuildz(xy_2d_array, counter, max_degree_ + 1, info, model, rep);
+        //printf("%d\n", int(info)); // EXPECTED: 1
+        lrunpack(model, c, nvars);
+        //printf("%s\n", c.tostring(4).c_str()); // EXPECTED: [1.98650,0.00000]
+    }
+    catch(alglib::ap_error e)
+    {
+        printf("error msg: %s\n", e.msg.c_str());
+    }
 
-    lrbuildz(xy_2d_array, n_obs, max_degree_ + 1, info, model, rep);
-    //printf("%d\n", int(info)); // EXPECTED: 1
-    lrunpack(model, c, nvars);
-    //printf("%s\n", c.tostring(4).c_str()); // EXPECTED: [1.98650,0.00000]
     coeffs_ = pnl_vect_create_from_ptr(max_degree_ + 1, &c[0]);
 }
 void PolyReg::apply_fit(PnlVect* stock_values, PnlVect* fitted_values){

@@ -73,3 +73,15 @@ add_custom_command(TARGET TEST-AMC POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:TEST-AMC>)
+
+
+
+
+add_executable(TEST-AMC-factorized test/test-AmericanMC.cpp src/BlackScholesModel.cpp src/BlackScholesModel.h src/PolyReg.cpp src/PolyReg.h src/Option.cpp src/Option.h src/VanillaPutOption.cpp src/VanillaPutOption.hpp src/AmericanMonteCarlo.cpp src/AmericanMonteCarlo.hpp  src/GeometricPutOption.cpp src/GeometricPutOption.hpp   utilities/Utilities.cpp ${ML})
+
+target_link_libraries(TEST-AMC-factorized ${LIBS})
+
+add_custom_command(TARGET TEST-AMC-factorized POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST-AMC-factorized>)

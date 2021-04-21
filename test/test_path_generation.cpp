@@ -24,7 +24,7 @@ int main(){
     double T = 1.0;
     double strike = 100;
     int nbTimeSteps = 8;
-    int nb_paths = 10;
+    int nb_paths = 1;
 
     BlackScholesModel* model = new BlackScholesModel(size, r, rho, sigma, spot, nbTimeSteps);
     PnlMat* simulated_path = pnl_mat_create(nbTimeSteps + 1, size);
