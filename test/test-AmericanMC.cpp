@@ -13,17 +13,17 @@ int main(){
     pnl_rng_sseed(rng, time(NULL));
 
     double r = 0.06; // 0.01 %
-    double spot_ = 36;
-    double sigma_ = 0.2;
+    double spot_ = 40;
+    double sigma_ = 0.4;
     int size = 1;
     PnlVect *spot = pnl_vect_create_from_scalar(size, spot_);
     PnlVect *sigma = pnl_vect_create_from_scalar(size, sigma_);
     double T = 2.0;
     double rho = 0;
     double strike = 40;
-    int nbTimeSteps = 50 * 2;
-    int nb_paths = 60000;
-    string poly_type = "Laguerre";
+    int nbTimeSteps = 50*2;
+    int nb_paths = 50000;
+    string poly_type = "Hermite";
     int max_degree = 2;
     BlackScholesModel* model = new BlackScholesModel(size, r, rho, sigma, spot, nbTimeSteps);
     VanillaPutOption* putOption = new VanillaPutOption(strike, T);
@@ -33,7 +33,7 @@ int main(){
     PnlMat* exercises_matrix = pnl_mat_create(nb_paths, nbTimeSteps + 1);
     amc->exerciseMatrix(exercises_matrix);
 
-    cout << "exercise matrix" << endl;
+    //cout << "exercise matrix" << endl;
     //pnl_mat_print(exercises_matrix);
 
     pnl_mat_free(&exercises_matrix);

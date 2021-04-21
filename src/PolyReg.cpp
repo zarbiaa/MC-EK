@@ -277,7 +277,7 @@ void PolyReg::fit2(PnlVect *stock_values1, PnlVect *stock_values2 , PnlVect *dis
         }
     }
     real_2d_array xy_2d_array;
-    xy_2d_array.attach_to_ptr(n_obs, max + 1, &xy[0][0]);
+    xy_2d_array.attach_to_ptr(counter, max + 1, &xy[0][0]);
     //printf("%s\n", xy_2d_array.tostring(4).c_str());
 
 
@@ -287,7 +287,7 @@ void PolyReg::fit2(PnlVect *stock_values1, PnlVect *stock_values2 , PnlVect *dis
     lrreport rep;
     real_1d_array c;
 
-    lrbuildz(xy_2d_array, n_obs, (max_degree_+1)*(max_degree_+1), info, model, rep);
+    lrbuildz(xy_2d_array, counter, (max_degree_+1)*(max_degree_+1), info, model, rep);
     //printf("%d\n", int(info)); // EXPECTED: 1
     lrunpack(model, c, nvars);
     //printf("%s\n", c.tostring(4).c_str()); // EXPECTED: [1.98650,0.00000]

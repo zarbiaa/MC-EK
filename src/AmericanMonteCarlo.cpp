@@ -33,6 +33,8 @@ void AmericanMonteCarlo::estimate_continuation(PnlVect* continuation_values){
         pnl_mat_get_col(vect_stock_values_2, mat_stock_values_, 1);
         cout << "REGRESSION 2-D NEEDED HERE!" << endl;
         // TO DO : manage the 2-d case, fit2 and fit1 !!!
+        mod_reg_->fit2(vect_stock_values_1, vect_stock_values_2, tmp_CFs_);
+        mod_reg_->apply_fit2(vect_stock_values_1, vect_stock_values_2, continuation_values);
     }
 }
 double AmericanMonteCarlo::compute_DF(int present_instant, int future_instant){
@@ -137,15 +139,5 @@ void AmericanMonteCarlo::exerciseMatrix(PnlMat *exercises_matrix) {
     }
     cout << "price = " << price/nb_paths_ << endl;
 
-
-    /*PnlVect *regression_stocks = pnl_vect_create(nb_paths_);
-    PnlVect *regression_CF = pnl_vect_create(nb_paths_);
-    PnlVect* vect_strike = pnl_vect_create_from_scalar(nb_paths_, opt_->K_);
-    PnlVect* tmp_payoffs = pnl_vect_create(nb_paths_);
-    PnlVect *tmp_stocks = pnl_vect_create(nb_paths_);
-    PnlVect *tmp_ATM_indic = pnl_vect_create(nb_paths_);
-    PnlVect *tmp_CFs = pnl_vect_create(nb_paths_);
-    PnlVect *tmp_future_CF = pnl_vect_create(nb_paths_);
-    */
 }
 

@@ -46,8 +46,4 @@ int main() {
     polyreg->apply_fit2(stock_values1,stock_values2, fitted_values);
     pnl_vect_print(fitted_values);
 
-
-
-
-
 }
