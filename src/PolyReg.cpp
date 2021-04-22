@@ -30,9 +30,10 @@ type choix_type(std::string input) {
     return Default;
 }
 
-void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
+void PolyReg::fit(PnlVect* stock_values, PnlVect* discounted_CF){
     int n_obs = stock_values->size;
-    double xy[n_obs][max_degree_ + 2];
+    int n_degree = max_degree_ + 2;
+    double* xy = new double[n_obs * (max_degree_ + 2)];
     double stock_value;
     int counter = 0;
     switch( choix_type(poly_type_) )
@@ -41,11 +42,12 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
             for(int i = 0; i < n_obs; i++){
                 stock_value = GET(stock_values, i);
                 if(stock_value > 0){
-                for(int degree = 0; degree <= max_degree_; degree++){
-                    xy[counter][degree] = chebyshevcalculate(1, degree, stock_value);
-                }
-                xy[counter][max_degree_ + 1] = GET(discounted_CF, i);
-                counter++;
+                    for(int degree = 0; degree <= max_degree_; degree++){
+                        *(xy + counter * n_degree + degree) = chebyshevcalculate(1, degree, stock_value);
+
+                    }
+                    *(xy + counter * n_degree + max_degree_ + 1) = GET(discounted_CF, i);
+                    counter++;
                 }
                 //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
             }
@@ -55,12 +57,12 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
             for(int i = 0; i < n_obs; i++){
                 stock_value = GET(stock_values, i);
                 if(stock_value > 0){
-                for(int degree = 0; degree <= max_degree_; degree++){
-                    xy[counter][degree] = chebyshevcalculate(2, degree, stock_value);
-                }
-                xy[counter][max_degree_ + 1] = GET(discounted_CF, i);
-                //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
-                counter++;
+                    for(int degree = 0; degree <= max_degree_; degree++){
+                        *(xy + counter * n_degree + degree) = chebyshevcalculate(2, degree, stock_value);
+                    }
+                    *(xy + counter * n_degree + max_degree_ + 1) = GET(discounted_CF, i);
+                    //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
+                    counter++;
                 }
             }
             break;
@@ -69,14 +71,14 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
             for(int i = 0; i < n_obs; i++){
                 stock_value = GET(stock_values, i);
                 if(stock_value > 0){
-                for(int degree = 0; degree <= max_degree_; degree++){
-                    xy[counter][degree] = hermitecalculate( degree, stock_value);
+                    for(int degree = 0; degree <= max_degree_; degree++){
+                        *(xy + counter * n_degree + degree) = hermitecalculate( degree, stock_value);
+                    }
+                    *(xy + counter * n_degree + max_degree_ + 1) = GET(discounted_CF, i);
+                    //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
+                    counter++;
                 }
-                xy[counter][max_degree_ + 1] = GET(discounted_CF, i);
-                //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
-                counter++;
-                }
-                }
+            }
             break;
         }
         case Legendre: {
@@ -84,9 +86,9 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
                 stock_value = GET(stock_values, i);
                 if (stock_value > 0) {
                     for (int degree = 0; degree <= max_degree_; degree++) {
-                        xy[counter][degree] = legendrecalculate(degree, stock_value);
+                        *(xy + counter * n_degree + degree) = legendrecalculate(degree, stock_value);
                     }
-                    xy[counter][max_degree_ + 1] = GET(discounted_CF, i);
+                    *(xy + counter * n_degree + max_degree_ + 1) = GET(discounted_CF, i);
                     //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
                     counter++;
                 }
@@ -99,19 +101,19 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
                 stock_value = GET(stock_values, i);
                 if (stock_value > 0) {
                     for (int degree = 0; degree <= max_degree_; degree++) {
-                        xy[counter][degree] = laguerrecalculate(degree, stock_value);
+                        *(xy + counter * n_degree + degree) = laguerrecalculate(degree, stock_value);
                     }
-                    xy[counter][max_degree_ + 1] = GET(discounted_CF, i);
+                    *(xy + counter * n_degree + max_degree_ + 1) = GET(discounted_CF, i);
                     //cout<<xy[i][0]<<" | "<<xy[i][1]<<" | "<<xy[i][2]<<" | "<<xy[i][3]<<endl;
-                counter++;
+                    counter++;
                 }
-                }
+            }
             break;
         }
     }
 
     real_2d_array xy_2d_array;
-    xy_2d_array.attach_to_ptr(counter,max_degree_+2,&xy[0][0]);
+    xy_2d_array.attach_to_ptr(counter,max_degree_+2,xy);
     //cout << "n_obs" << n_obs << endl;
     //cout << "counter" << counter << endl;
     //printf("%s\n", xy_2d_array.tostring(4).c_str());
@@ -135,6 +137,8 @@ void PolyReg::fit(PnlVect *stock_values, PnlVect *discounted_CF) {
     }
 
     coeffs_ = pnl_vect_create_from_ptr(max_degree_ + 1, &c[0]);
+    free(xy);
+
 }
 void PolyReg::apply_fit(PnlVect* stock_values, PnlVect* fitted_values){
     int n_obs = stock_values->size;

@@ -21,10 +21,10 @@ int main(){
     double T = 2.0;
     double rho = 0;
     double strike = 40;
-    int nbTimeSteps = 50*2;
-    int nb_paths = 50000;
-    string poly_type = "Hermite";
-    int max_degree = 2;
+    int nbTimeSteps = 2*50;
+    int nb_paths = 100000;
+    string poly_type = "Chebyshev2";
+    int max_degree = 3;
     BlackScholesModel* model = new BlackScholesModel(size, r, rho, sigma, spot, nbTimeSteps);
     VanillaPutOption* putOption = new VanillaPutOption(strike, T);
     PolyReg* mod_reg = new PolyReg(poly_type, max_degree);
