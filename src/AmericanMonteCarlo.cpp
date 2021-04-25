@@ -130,14 +130,20 @@ void AmericanMonteCarlo::exerciseMatrix(PnlMat *exercises_matrix) {
     pnl_vect_free(&optimal_vect);
 
     double price = 0.0;
+    double strike = opt_->K_;double spot = GET(mod_->spot_,0);
+    double delta = 0.0;
     double df = 0.0;
+    double exercice=0.0;
     for(int idx_instant = 1; idx_instant <= nb_timesteps_; idx_instant++){
         df = compute_DF(0, idx_instant);
         for(int idx_path = 0; idx_path < nb_paths_; idx_path++){
+            exercice=is_bigger(MGET(exercises_matrix, idx_path, idx_instant) ,0);
             price += MGET(exercises_matrix, idx_path, idx_instant) * df;
+            delta += (MGET(exercises_matrix, idx_path, idx_instant) - strike) * exercice * df ;
         }
     }
-    cout << "price = " << price/nb_paths_ << endl;
+    cout << "price       : " << price/nb_paths_ << endl;
+    cout << "Delta à t=0 : " << delta/(nb_paths_*spot) << endl;
 
 }
 
