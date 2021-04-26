@@ -31,7 +31,7 @@ void AmericanMonteCarlo::estimate_continuation(PnlVect* continuation_values){
     else{
         pnl_mat_get_col(vect_stock_values_1, mat_stock_values_, 0);
         pnl_mat_get_col(vect_stock_values_2, mat_stock_values_, 1);
-        cout << "REGRESSION 2-D NEEDED HERE!" << endl;
+        //cout << "REGRESSION 2-D NEEDED HERE!" << endl;
         // TO DO : manage the 2-d case, fit2 and fit1 !!!
         mod_reg_->fit2(vect_stock_values_1, vect_stock_values_2, tmp_CFs_);
         mod_reg_->apply_fit2(vect_stock_values_1, vect_stock_values_2, continuation_values);

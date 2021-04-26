@@ -7,6 +7,7 @@
 
 #include "Option.h"
 #include "VanillaPutOption.hpp"
+#include "GeometricPutOption.hpp"
 #include "PolyReg.h"
 #include "BlackScholesModel.h"
 #include "pnl/pnl_random.h"
