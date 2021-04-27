@@ -142,8 +142,8 @@ void AmericanMonteCarlo::exerciseMatrix(PnlMat *exercises_matrix) {
             delta += (MGET(exercises_matrix, idx_path, idx_instant) - strike) * exercice * df ;
         }
     }
-    cout << "price       : " << price/nb_paths_ << endl;
-    cout << "Delta à t=0 : " << delta/(nb_paths_*spot) << endl;
+    cout << "AMC price at t=0 : " << price/nb_paths_ << endl;
+    cout << "AMC Delta at t=0 : " << delta/(nb_paths_*spot) << endl;
 
 }
 

@@ -20,7 +20,7 @@ int main(){
     PnlVect *spot = pnl_vect_create_from_scalar(size, spot_);
     PnlVect *sigma = pnl_vect_create_from_scalar(size, sigma_);
     double T = 1.0;
-    double rho = 1;
+    double rho = 0.999;
     double strike = 40;
     int nbTimeSteps = 50;
     int nb_paths = 10000;

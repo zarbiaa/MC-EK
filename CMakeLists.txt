@@ -103,3 +103,12 @@ add_custom_command(TARGET TEST-GSE POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:TEST-GSE>)
+
+add_executable(GLOBAL-TEST-2D test/test_BS_vs_MC_vs_AMC_geometric_put.cpp src/AmericanMonteCarlo.hpp src/AmericanMonteCarlo.cpp src/EuropeanMonteCarlo.cpp src/EuropeanMonteCarlo.hpp src/BlackScholesModel.h src/BlackScholesModel.cpp src/Option.h src/Option.cpp src/VanillaPutOption.hpp src/VanillaPutOption.cpp src/GeometricPutOption.hpp src/GeometricPutOption.cpp src/PolyReg.h src/PolyReg.cpp ${ML})
+
+target_link_libraries(GLOBAL-TEST-2D ${LIBS})
+
+add_custom_command(TARGET GLOBAL-TEST-2D POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:GLOBAL-TEST-2D>)
