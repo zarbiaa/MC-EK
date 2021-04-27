@@ -13,19 +13,19 @@ int main(){
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     pnl_rng_sseed(rng, time(NULL));
 
-    double r = 0.04;
-    double spot_ = 1;
+    double r = 0.06;
+    double spot_ = 38;
     double sigma_ = 0.2;
     int size = 2;
     PnlVect *spot = pnl_vect_create_from_scalar(size, spot_);
     PnlVect *sigma = pnl_vect_create_from_scalar(size, sigma_);
     double T = 1.0;
     double rho = 1;
-    double strike = 8;
+    double strike = 40;
     int nbTimeSteps = 50;
-    int nb_paths = 100000;
-    string poly_type = "Chebyshev2";
-    int max_degree = 3;
+    int nb_paths = 10000;
+    string poly_type = "Laguerre";
+    int max_degree = 2;
     BlackScholesModel* model = new BlackScholesModel(size, r, rho, sigma, spot, nbTimeSteps);
     Option* geo_putOption = new GeometricPutOption(strike, T);
     PolyReg* mod_reg = new PolyReg(poly_type, max_degree);

@@ -85,3 +85,21 @@ add_custom_command(TARGET TEST-AMC-factorized POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:TEST-AMC-factorized>)
+
+add_executable(TEST-AMC-2D test/test-AmericanMC-2d.cpp src/BlackScholesModel.cpp src/BlackScholesModel.h src/PolyReg.cpp src/PolyReg.h src/Option.cpp src/Option.h src/VanillaPutOption.cpp src/VanillaPutOption.hpp src/AmericanMonteCarlo.cpp src/AmericanMonteCarlo.hpp  src/GeometricPutOption.cpp src/GeometricPutOption.hpp   utilities/Utilities.cpp ${ML})
+
+target_link_libraries(TEST-AMC-2D ${LIBS})
+
+add_custom_command(TARGET TEST-AMC-2D POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST-AMC-2D>)
+
+add_executable(TEST-GSE test/test_BS_vs_MC_vanilla_geometric_put.cpp src/EuropeanMonteCarlo.cpp src/EuropeanMonteCarlo.hpp src/BlackScholesModel.h src/BlackScholesModel.cpp src/Option.h src/Option.cpp src/VanillaPutOption.hpp src/VanillaPutOption.cpp src/GeometricPutOption.hpp src/GeometricPutOption.cpp ${ML})
+
+target_link_libraries(TEST-GSE ${LIBS})
+
+add_custom_command(TARGET TEST-GSE POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST-GSE>)

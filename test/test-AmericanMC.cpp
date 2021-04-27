@@ -24,18 +24,18 @@ int main(){
     int nbTimeSteps = 2*50;
     int nb_paths = 100000;*/
 
-    double r = 0.04; // 0.01 %
-    double spot_ = 1;
+    double r = 0.06; // 0.01 %
+    double spot_ = 38;
     double sigma_ = 0.2;
     int size = 1;
     PnlVect *spot = pnl_vect_create_from_scalar(size, spot_);
     PnlVect *sigma = pnl_vect_create_from_scalar(size, sigma_);
     double T = 1.0;
     double rho = 0;
-    double strike = 8;
+    double strike = 40;
     int nbTimeSteps = 50;
     int nb_paths = 100000;
-    string poly_type = "Chebyshev2";
+    string poly_type = "Laguerre";
     int max_degree = 2;
     BlackScholesModel* model = new BlackScholesModel(size, r, rho, sigma, spot, nbTimeSteps);
     VanillaPutOption* putOption = new VanillaPutOption(strike, T);
