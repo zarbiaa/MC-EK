@@ -164,12 +164,13 @@ void AmericanMonteCarlo::Antithetic_exerciseMatrix(PnlMat* exercises_matrix, Pnl
     free(antithetic_stock_paths);
 }
 
-void AmericanMonteCarlo::price_and_delta(double &price, double &delta){
+void AmericanMonteCarlo::price_and_delta(double &price, PnlVect* deltas){
     PnlMat* exercises_matrix = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
     exerciseMatrix(exercises_matrix);
-    double strike = opt_->K_;double spot = GET(mod_->spot_,0);
+    double strike = opt_->K_;
     double df = 0.0;
     double exercice=0.0;
+    double delta = 0.0;
     for(int idx_instant = 1; idx_instant <= nb_timesteps_; idx_instant++){
         df = compute_DF(0, idx_instant);
         for(int idx_path = 0; idx_path < nb_paths_; idx_path++){
@@ -179,12 +180,13 @@ void AmericanMonteCarlo::price_and_delta(double &price, double &delta){
         }
     }
     price = price/nb_paths_;
-    delta = delta/(nb_paths_ * spot);
-
+    for(int i = 0; i < mod_->size_; i++) {
+        pnl_vect_set(deltas, i, delta / (nb_paths_ * GET(mod_->spot_, i)));
+    }
     pnl_mat_free(&exercises_matrix);
 }
 
-void AmericanMonteCarlo::antithetic_price_and_delta(double &price, double &delta){
+void AmericanMonteCarlo::antithetic_price_and_delta(double &price, PnlVect* deltas){
     PnlMat* exercises_matrix = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
     PnlMat* antithetic_exercises_matrix = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
 
@@ -192,8 +194,9 @@ void AmericanMonteCarlo::antithetic_price_and_delta(double &price, double &delta
     // TO DO !!
     Antithetic_exerciseMatrix(exercises_matrix, antithetic_exercises_matrix);
     // compute the price and the delta based on the 2 different antithetic matrices
-    double strike = opt_->K_;double spot = GET(mod_->spot_,0);
+    double strike = opt_->K_;
     double df = 0.0;
+    double delta = 0.0;
     double exercice=0.0; double antithetic_exercice = 0.0;
     for(int idx_instant = 1; idx_instant <= nb_timesteps_; idx_instant++){
         df = compute_DF(0, idx_instant);
@@ -205,7 +208,9 @@ void AmericanMonteCarlo::antithetic_price_and_delta(double &price, double &delta
         }
     }
     price = price/nb_paths_;
-    delta = delta/(nb_paths_ * spot);
+    for(int i = 0; i < mod_->size_; i++) {
+        pnl_vect_set(deltas, i, delta / (nb_paths_ * GET(mod_->spot_, i)));
+    }
     pnl_mat_free(&exercises_matrix);
     pnl_mat_free(&antithetic_exercises_matrix);
 

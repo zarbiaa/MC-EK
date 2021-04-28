@@ -23,7 +23,7 @@ int main(){
     double rho = 0.999;
     double strike = 40;
     int nbTimeSteps = 50;
-    int nb_paths = 10000;
+    int nb_paths = 100000;
     string poly_type = "Laguerre";
     int max_degree = 2;
     BlackScholesModel* model = new BlackScholesModel(size, r, rho, sigma, spot, nbTimeSteps);

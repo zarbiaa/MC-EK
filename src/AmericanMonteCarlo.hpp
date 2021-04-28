@@ -62,8 +62,8 @@ public:
     void optimal_exercise(PnlMat* exercises_matrix, PnlVect* continuation_values, PnlVect* payoffs, PnlVect* optimal_vect, int idx_instant);
     void optimal_exercise_vect(PnlVect* optimal_vect, PnlVect* payoffs, PnlVect* continuations);
     void Compute_optimal_stopping(PnlMat* exercises_matrix, PnlMat** stock_paths);
-    void price_and_delta(double &price, double &delta);
-    void antithetic_price_and_delta(double &price, double &delta);
+    void price_and_delta(double &price, PnlVect* deltas);
+    void antithetic_price_and_delta(double &price, PnlVect* deltas);
 
 
 
