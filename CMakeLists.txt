@@ -112,3 +112,12 @@ add_custom_command(TARGET GLOBAL-TEST-2D POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
         $<TARGET_FILE_DIR:GLOBAL-TEST-2D>)
+
+add_executable(TEST-ANTITHETIC test/testAmericanPut-Antithetic.cpp src/BlackScholesModel.cpp src/BlackScholesModel.h src/PolyReg.cpp src/PolyReg.h src/Option.cpp src/Option.h src/VanillaPutOption.cpp src/VanillaPutOption.hpp src/AmericanMonteCarlo.cpp src/AmericanMonteCarlo.hpp  src/GeometricPutOption.cpp src/GeometricPutOption.hpp   utilities/Utilities.cpp ${ML})
+
+target_link_libraries(TEST-ANTITHETIC ${LIBS})
+
+add_custom_command(TARGET TEST-ANTITHETIC POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/pnl-win64-1.10.4/lib/"
+        $<TARGET_FILE_DIR:TEST-ANTITHETIC>)

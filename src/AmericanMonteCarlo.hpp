@@ -53,6 +53,7 @@ public:
 
     void Compute_payoffs(PnlMat *exercises_matrix, PnlMat** stock_paths, PnlVect* payoffs, int idx_instant);
     void exerciseMatrix(PnlMat* exercises_matrix);
+    void Antithetic_exerciseMatrix(PnlMat* exercises_matrix, PnlMat* antithetic_exercises_matrix);
     void retrieve_stock_values(PnlMat** stock_paths, int idx_instant);
     void retrieve_ATM_stock_values(PnlMat* vect_strike);
     void compute_future_discounted_CF(PnlMat* exercises_matrix, int idx_instant);
@@ -60,6 +61,11 @@ public:
     void estimate_continuation(PnlVect* continuation_values);
     void optimal_exercise(PnlMat* exercises_matrix, PnlVect* continuation_values, PnlVect* payoffs, PnlVect* optimal_vect, int idx_instant);
     void optimal_exercise_vect(PnlVect* optimal_vect, PnlVect* payoffs, PnlVect* continuations);
+    void Compute_optimal_stopping(PnlMat* exercises_matrix, PnlMat** stock_paths);
+    void price_and_delta(double &price, double &delta);
+    void antithetic_price_and_delta(double &price, double &delta);
+
+
 
     };
 

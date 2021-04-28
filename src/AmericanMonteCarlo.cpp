@@ -70,31 +70,14 @@ void AmericanMonteCarlo::Compute_payoffs(PnlMat *exercises_matrix, PnlMat** stoc
     retrieve_stock_values(stock_paths, idx_instant);
     opt_->payoff(payoffs, mat_stock_values_);
 }
-void AmericanMonteCarlo::exerciseMatrix(PnlMat *exercises_matrix) {
+
+void AmericanMonteCarlo::Compute_optimal_stopping(PnlMat* exercises_matrix, PnlMat** stock_paths){
     PnlVect* tmp_payoffs = pnl_vect_create(nb_paths_);
     PnlVect* indic_ATM = pnl_vect_create(nb_paths_);
     PnlMat* vect_strike = pnl_mat_create_from_scalar(nb_paths_, mod_->size_, opt_->K_);
     PnlVect *tmp_continuation = pnl_vect_create(nb_paths_);
     PnlVect *optimal_vect = pnl_vect_create(nb_paths_);
 
-
-    double timespan = opt_->maturity_ / (float) nb_timesteps_;
-
-    PnlMat** stock_paths = (PnlMat**) malloc(0);
-    for(int i = 0; i < mod_->size_; i++){
-        stock_paths[i] = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
-    }
-    mod_->generate_paths(stock_paths, opt_->maturity_, nb_paths_, nb_timesteps_, rng_);
-
-    /*double stock_matrix[32] = {1.0, 1.09, 1.08, 1.34, 1.0, 1.16, 1.26, 1.54, 1, 1.22, 1.07, 1.03, 1, 0.93, 0.97, 0.92, 1, 1.11, 1.56, 1.52, 1, 0.76, 0.77, 0.90, 1, 0.92, 0.84, 1.01, 1.0, 0.88, 1.22, 1.34};
-    stock_paths[0] = pnl_mat_create_from_ptr(nb_paths_, nb_timesteps_ + 1, &stock_matrix[0]);
-    stock_paths[1] = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);*/
-
-
-    /*for(int i = 0; i < mod_->size_; i++){
-        pnl_mat_print(stock_paths[i]);
-        cout << endl;
-    }*/
     //1st step: fill the last column of exercises_matrix with payoffs at expiry
     Compute_payoffs(exercises_matrix, stock_paths, tmp_payoffs, nb_timesteps_);
     pnl_mat_set_col(exercises_matrix, tmp_payoffs, nb_timesteps_);
@@ -117,18 +100,33 @@ void AmericanMonteCarlo::exerciseMatrix(PnlMat *exercises_matrix) {
         estimate_continuation(tmp_continuation);
         optimal_exercise(exercises_matrix, tmp_continuation, tmp_payoffs, optimal_vect, idx_instant);
     }
-
-
-    for(int i = 0; i < mod_->size_; i++){
-        pnl_mat_free(&stock_paths[i]);
-    }
-    free(stock_paths);
     pnl_vect_free(&tmp_payoffs);
     pnl_mat_free(&vect_strike);
     pnl_vect_free(&indic_ATM);
     pnl_vect_free(&tmp_continuation);
     pnl_vect_free(&optimal_vect);
+}
+void AmericanMonteCarlo::exerciseMatrix(PnlMat *exercises_matrix) {
+    double timespan = opt_->maturity_ / (float) nb_timesteps_;
 
+    PnlMat** stock_paths = (PnlMat**) malloc(0);
+    for(int i = 0; i < mod_->size_; i++){
+        stock_paths[i] = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
+    }
+    mod_->generate_paths(stock_paths, opt_->maturity_, nb_paths_, nb_timesteps_, rng_);
+    /*double stock_matrix[32] = {1.0, 1.09, 1.08, 1.34, 1.0, 1.16, 1.26, 1.54, 1, 1.22, 1.07, 1.03, 1, 0.93, 0.97, 0.92, 1, 1.11, 1.56, 1.52, 1, 0.76, 0.77, 0.90, 1, 0.92, 0.84, 1.01, 1.0, 0.88, 1.22, 1.34};
+    stock_paths[0] = pnl_mat_create_from_ptr(nb_paths_, nb_timesteps_ + 1, &stock_matrix[0]);
+    stock_paths[1] = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);*/
+    /*for(int i = 0; i < mod_->size_; i++){
+        pnl_mat_print(stock_paths[i]);
+        cout << endl;
+    }*/
+
+    Compute_optimal_stopping(exercises_matrix, stock_paths);
+    for(int i = 0; i < mod_->size_; i++){
+        pnl_mat_free(&stock_paths[i]);
+    }
+    free(stock_paths);
     double price = 0.0;
     double strike = opt_->K_;double spot = GET(mod_->spot_,0);
     double delta = 0.0;
@@ -144,6 +142,72 @@ void AmericanMonteCarlo::exerciseMatrix(PnlMat *exercises_matrix) {
     }
     cout << "AMC price at t=0 : " << price/nb_paths_ << endl;
     cout << "AMC Delta at t=0 : " << delta/(nb_paths_*spot) << endl;
+}
+
+void AmericanMonteCarlo::Antithetic_exerciseMatrix(PnlMat* exercises_matrix, PnlMat* antithetic_exercises_matrix){
+    double timespan = opt_->maturity_ / (float) nb_timesteps_;
+
+    PnlMat** stock_paths = (PnlMat**) malloc(0);
+    PnlMat** antithetic_stock_paths = (PnlMat**) malloc(0);
+    for(int i = 0; i < mod_->size_; i++){
+        stock_paths[i] = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
+        antithetic_stock_paths[i] = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
+    }
+    mod_->generate_antithetic_paths(stock_paths, antithetic_stock_paths, opt_->maturity_, nb_paths_, nb_timesteps_, rng_);
+    Compute_optimal_stopping(exercises_matrix, stock_paths);
+    Compute_optimal_stopping(antithetic_exercises_matrix, antithetic_stock_paths);
+    for(int i = 0; i < mod_->size_; i++){
+        pnl_mat_free(&stock_paths[i]);
+        pnl_mat_free(&antithetic_stock_paths[i]);
+    }
+    free(stock_paths);
+    free(antithetic_stock_paths);
+}
+
+void AmericanMonteCarlo::price_and_delta(double &price, double &delta){
+    PnlMat* exercises_matrix = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
+    exerciseMatrix(exercises_matrix);
+    double strike = opt_->K_;double spot = GET(mod_->spot_,0);
+    double df = 0.0;
+    double exercice=0.0;
+    for(int idx_instant = 1; idx_instant <= nb_timesteps_; idx_instant++){
+        df = compute_DF(0, idx_instant);
+        for(int idx_path = 0; idx_path < nb_paths_; idx_path++){
+            exercice=is_bigger(MGET(exercises_matrix, idx_path, idx_instant) ,0);
+            price += MGET(exercises_matrix, idx_path, idx_instant) * df;
+            delta += (MGET(exercises_matrix, idx_path, idx_instant) - strike) * exercice * df ;
+        }
+    }
+    price = price/nb_paths_;
+    delta = delta/(nb_paths_ * spot);
+
+    pnl_mat_free(&exercises_matrix);
+}
+
+void AmericanMonteCarlo::antithetic_price_and_delta(double &price, double &delta){
+    PnlMat* exercises_matrix = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
+    PnlMat* antithetic_exercises_matrix = pnl_mat_create(nb_paths_, nb_timesteps_ + 1);
+
+    // treatment of the American MC
+    // TO DO !!
+    Antithetic_exerciseMatrix(exercises_matrix, antithetic_exercises_matrix);
+    // compute the price and the delta based on the 2 different antithetic matrices
+    double strike = opt_->K_;double spot = GET(mod_->spot_,0);
+    double df = 0.0;
+    double exercice=0.0; double antithetic_exercice = 0.0;
+    for(int idx_instant = 1; idx_instant <= nb_timesteps_; idx_instant++){
+        df = compute_DF(0, idx_instant);
+        for(int idx_path = 0; idx_path < nb_paths_; idx_path++){
+            exercice=is_bigger(MGET(exercises_matrix, idx_path, idx_instant) ,0);
+            antithetic_exercice = is_bigger(MGET(antithetic_exercises_matrix, idx_path, idx_instant), 0);
+            price += 0.5 * (MGET(exercises_matrix, idx_path, idx_instant) + MGET(antithetic_exercises_matrix, idx_path, idx_instant)) * df;
+            delta += 0.5 * ((MGET(exercises_matrix, idx_path, idx_instant) - strike) * exercice  + MGET(antithetic_exercises_matrix, idx_path, idx_instant) * antithetic_exercice) * df ;
+        }
+    }
+    price = price/nb_paths_;
+    delta = delta/(nb_paths_ * spot);
+    pnl_mat_free(&exercises_matrix);
+    pnl_mat_free(&antithetic_exercises_matrix);
 
 }
 
